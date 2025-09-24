@@ -11,12 +11,14 @@ jobs:
   build:
     runs-on: windows-latest
 
+
     steps:
-    - name: Checkout Flutter Monorepo
+    - name: Checkout Flutter Monorepo at specific commit
       uses: actions/checkout@v4
       with:
         repository: sideloads/flutter
-        ref: d693b4b
+        ref: d693b4b9dbac2acd4477aea4555ca6dcbea44ba2
+        fetch-depth: 0
         path: flutter
 
     - name: Set up Depot Tools
@@ -70,7 +72,7 @@ jobs:
       run: Compress-Archive -Path flutter/engine/src/out/host_release/* -DestinationPath flutter-engine-windows-release.zip
       shell: pwsh
 
-    - name: Upload Zipped Artifact
+    - name: Upload Zipped Artifact to bashupload.com
       run: |
         Write-Host "Uploading flutter-engine-windows-release.zip to bashupload.com"
         try {
