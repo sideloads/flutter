@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-2019
+    runs-on: windows-latest
 
     steps:
     - name: Checkout Flutter Monorepo at specific commit
@@ -37,21 +37,12 @@ jobs:
     - name: Enable Long Path Support
       run: Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1 -Force
       shell: pwsh
-
-    - name: Set Visual Studio Environment Variables
-      run: |
-        echo "DEPOT_TOOLS_WIN_TOOLCHAIN=0" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-        echo "GYP_MSVS_OVERRIDE_PATH=${{ env.VSWIN_INSTALLER }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-        echo "WINDOWSSDKDIR=${{ env.WindowsSdkDir }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-      shell: pwsh
-      env:
-        VSWIN_INSTALLER: "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\Enterprise"
-        WindowsSdkDir: "C:\\Program Files (x86)\\Windows Kits\\10\\"
-
+      
     - name: Configure and Synchronize Dependencies
       run: |
         cd flutter
         copy engine\scripts\standard.gclient .gclient
+        # This command will now also fetch the appropriate Windows toolchain
         gclient sync -D
       shell: cmd
 
